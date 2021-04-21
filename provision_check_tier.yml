@@ -1,5 +1,5 @@
 - name: End to end smoke tests
-  hosts: app_servers:database_servers
+  hosts: all #app_servers:database_servers
   gather_facts: true
   become: true
   tags:
@@ -29,7 +29,7 @@
               
     - name: Check webserver for correct response
       uri:
-        url: "http://frontend/ping"
+        url: "http://{{ hostvars[groups.load_balancers[0]]['ansible_facts']['hostname'] }}/ping"
         return_content: yes
       until: '"alive" in result.content'
       retries: 10
